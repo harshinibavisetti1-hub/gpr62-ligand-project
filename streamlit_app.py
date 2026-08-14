@@ -6,7 +6,14 @@ import tensorflow as tf
 
 from tensorflow import keras
 from rdkit import Chem, DataStructs
-from rdkit.Chem import Draw, AllChem
+from rdkit.Chem import AllChem
+
+try:
+    from rdkit.Chem import Draw
+    RDKIT_DRAW_AVAILABLE = True
+except ImportError:
+    Draw = None
+    RDKIT_DRAW_AVAILABLE = False
 
 
 # ============================================================
@@ -108,6 +115,9 @@ def safe_float(value):
 
 def smiles_to_image(smiles):
 
+    if not RDKIT_DRAW_AVAILABLE:
+        return None
+
     if not valid_value(smiles):
         return None
 
@@ -127,7 +137,6 @@ def smiles_to_image(smiles):
 
     except Exception:
         return None
-
 
 def canonical_smiles(smiles):
 
