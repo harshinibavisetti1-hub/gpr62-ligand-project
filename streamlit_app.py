@@ -912,23 +912,7 @@ elif page == (
         hide_index=True
     )
 
-    st.markdown("""
-    ### How to interpret this
-
-    **C1q (C1QA)** is the main potential ligand-like candidate identified from
-    the direct GPR62 literature. The evidence suggests a possible interaction
-    with GPR62, but this does **not** establish C1q as the confirmed natural
-    ligand of GPR62.
-
-    **Melatonin** was also investigated in relation to GPR62, but the available
-    evidence was negative for direct binding.
-
-    These results are different from the **Ranked Candidates** page. Ranked
-    Candidates contains molecules prioritized using related-receptor evidence
-    and GPCRLigNet machine-learning predictions.
-    """)
-
-    st.divider()
+    
 
 # ============================================================
 # DIRECT MOLECULES / PROTEINS
