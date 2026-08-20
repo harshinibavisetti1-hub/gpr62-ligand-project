@@ -6,14 +6,7 @@ import tensorflow as tf
 
 from tensorflow import keras
 from rdkit import Chem, DataStructs
-from rdkit.Chem import AllChem
-
-try:
-    from rdkit.Chem import Draw
-    RDKIT_DRAW_AVAILABLE = True
-except ImportError:
-    Draw = None
-    RDKIT_DRAW_AVAILABLE = False
+from rdkit.Chem import Draw, AllChem
 
 
 # ============================================================
@@ -115,9 +108,6 @@ def safe_float(value):
 
 def smiles_to_image(smiles):
 
-    if not RDKIT_DRAW_AVAILABLE:
-        return None
-
     if not valid_value(smiles):
         return None
 
@@ -137,6 +127,7 @@ def smiles_to_image(smiles):
 
     except Exception:
         return None
+
 
 def canonical_smiles(smiles):
 
@@ -516,7 +507,7 @@ def show_pmid_links(
 # ============================================================
 
 st.title(
-    "🧬 GPR62 Ligand Discovery Platform"
+    " GPR62 Possible Ligands Website"
 )
 
 st.caption(
@@ -606,50 +597,17 @@ if page == "Overview":
 
 
     st.subheader(
-        "Discovery Workflow"
-    )
-
-
-    st.code(
-        """
-PubMed + PMC
-      ↓
-Literature collection
-      ↓
-PubTator biomedical entity extraction
-      ↓
-Direct GPR62 evidence analysis
-      ↓
-Related receptor expansion
-(GPR61, GPR135, MT2, 5-HT6)
-      ↓
-Chemical extraction
-      ↓
-PubChem structure / SMILES retrieval
-      ↓
-Morgan fingerprints
-(radius 4, 1024 bits)
-      ↓
-GPCRLigNet prediction
-      ↓
-Literature evidence validation
-      ↓
-Candidate ranking
-        """,
-        language="text"
-    )
-
-
-    st.subheader(
         "Why Related Receptors?"
     )
 
 
     st.write(
-        "Because GPR62 is an orphan receptor with limited "
-        "direct ligand information, related receptors were "
+        "Since GPR62 is an orphan receptor with limited "
+        "direct ligand research papers, related receptors were "
         "used to expand the candidate search space. "
-        "Candidate molecules from these receptors were then "
+        "These related receptors were found through the refrences"
+        "and mentions of the origninal GPR62 papers. Next, the "
+        "candidate molecules from these receptors were then "
         "evaluated computationally with GPCRLigNet."
     )
 
@@ -917,7 +875,60 @@ elif page == (
 
             "text/csv"
         )
+    # ============================================================
+    # POTENTIAL GPR62 LIGANDS FROM DIRECT LITERATURE
+    # These candidates come specifically from the original
+    # direct GPR62 literature search, NOT from GPCRLigNet.
+    # ============================================================
 
+    st.subheader("Potential GPR62 Ligands From Direct Literature")
+
+    st.info(
+        "These molecules come directly from the original GPR62 literature search. "
+        "They are separate from the candidates generated using related receptors "
+        "and GPCRLigNet predictions."
+    )
+
+    direct_ligands = pd.DataFrame([
+        {
+            "Candidate": "C1q (C1QA)",
+            "Type": "Protein / endogenous ligand candidate",
+            "Evidence": "Potential GPR62 interaction from receptor-screen context",
+            "PMID": "32894219",
+            "Result": "Potential ligand / binding partner candidate"
+        },
+        {
+            "Candidate": "Melatonin",
+            "Type": "Hormone / endogenous small molecule",
+            "Evidence": "Experimentally tested with GPR62",
+            "PMID": "28827538",
+            "Result": "Negative direct-binding evidence"
+        }
+    ])
+
+    st.dataframe(
+        direct_ligands,
+        use_container_width=True,
+        hide_index=True
+    )
+
+    st.markdown("""
+    ### How to interpret this
+
+    **C1q (C1QA)** is the main potential ligand-like candidate identified from
+    the direct GPR62 literature. The evidence suggests a possible interaction
+    with GPR62, but this does **not** establish C1q as the confirmed natural
+    ligand of GPR62.
+
+    **Melatonin** was also investigated in relation to GPR62, but the available
+    evidence was negative for direct binding.
+
+    These results are different from the **Ranked Candidates** page. Ranked
+    Candidates contains molecules prioritized using related-receptor evidence
+    and GPCRLigNet machine-learning predictions.
+    """)
+
+    st.divider()
 
 # ============================================================
 # DIRECT MOLECULES / PROTEINS
